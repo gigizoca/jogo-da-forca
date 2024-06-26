@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jogo da Forca</title>
+  <style>
+    /* Add a gradient background with neutral colors */
+    body {
+      background-image: linear-gradient(to bottom, #f7f7f7, #e5e5e5, #ccc);
+      background-size: 100% 300px;
+      background-position: 0% 100%;
+    }
+
+    /* Add a subtle shadow to the game board */
+    #game_board {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #fff;
+      width: 80%;
+      margin: 40px auto;
+    }
+
+    /* Add a subtle border to the word board */
+    #word_board {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+
+    /* Add a font with a playful feel */
+    #word_span {
+      font-family: 'Pacifico', cursive;
+      font-size: 24px;
+      color: #333;
+    }
+
+    /* Add a subtle border to the input field */
+    #input_letra {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 10px;
+      width: 50%;
+    }
+
+    /* Add a subtle border to the button */
+    #jogar_btn {
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Add a hover effect to the button */
+    #jogar_btn:hover {
+      background-color: #3e8e41;
+    }
+
+    /* Add a star design to the hangman image */
+    #hangman_img {
+      width: 100px;
+      height: 100px;
+      background-image: url('star.png');
+      background-size: 100px 100px;
+      background-position: center;
+      border-radius: 50%;
+    }
+
+    /* Add a gallows design to the hangman gallows */
+    #gallows {
+      width: 100px;
+      height: 100px;
+      background-image: url('gallows.png');
+      background-size: 100px 100px;
+      background-position: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="game_board">
+    <h1>Forca!</h1>
+    <div id="word_board">
+      <span id="word_span">_ _ _ _   _ _ _ _ _  ?</span>
+    </div>
+    <input id="input_letra" type="text" placeholder="Guess a letter!">
+    <button id="jogar_btn">Jogar!</button>
+    <div id="hangman_img"></div>
+    <div id="gallows"></div>
+  </div>
+
+  <script>
+    let word = "CADE MINHA ALIANÇA?";
+    let guessedLetters = [];
+    let mistakes = 0;
+
+    document.getElementById("jogar_btn").addEventListener("click", function() {
+      let letter = document.getElementById("input_letra").value.toUpperCase();
+      if (letter.length === 1) {
+        if (guessedLetters.includes(letter)) {
+          alert("You already guessed this letter!");
+        } else {
+          guessedLetters.push(letter);
+          let correct = false;
+          for (let i = 0; i < word.length; i++) {
+            if (word[i] === letter) {
+              correct = true;
+              document.getElementById("word_span").innerHTML = document.getElementById("word_span").innerHTML.replaceAt(i, letter);
+            }
+          }
+          if (!correct) {
+            mistakes++;
+            document.getElementById("gallows").style.backgroundImage = `url('gallows-${mistakes}.png')`;
+          }
+          if (mistakes === 6) {
+            alert("Game over! The word was " + word);
+          }
+        }
+      } else {
+        alert("Please enter a single letter!");
+      }
+      document.getElementById("input_letra").value = "";
+    });
+
+    String.prototype.replaceAt = function(index, replacement) {
+      return this.substring(0, index) + replacement + this.substring(index + replacement.length);
+    };
+  </script>
+</body>
+</html>
